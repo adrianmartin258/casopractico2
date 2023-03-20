@@ -1,0 +1,69 @@
+---
+
+- name: Copiar Node App
+  become: true
+  copy:
+    src: "../../../../app"
+    dest: /lib  
+    mode: 0755
+
+- name: Instalar CLI de Azure
+  become: true
+  shell:
+    chdir: /lib/
+    cmd: "apt install azure-cli -y"
+ 
+- name: Login
+  become: true
+  shell:
+    cmd: "docker login -u {{ cr_user }} -p {{ cr_pass }} {{ cr_host }}"
+    chdir: /lib/app
+  ignore_errors: true
+
+- name: Build
+  become: true
+  shell:
+    chdir: /lib/app  
+    cmd: "docker build -t app ."
+
+- name: Tag
+  become: true
+  shell:
+    chdir: /lib/app
+    cmd: "docker tag app {{ cr_tag }}"    
+
+- name: Push
+  become: true
+  shell:
+    chdir: /lib/app
+    cmd: "docker push {{ cr_tag }}"      
+
+- name: Azure CLI Login
+  shell: az login -u {{ az_user }} -p {{ az_pass }}
+  args:
+    executable: /bin/bash
+
+- name: Azure CLI AKS
+  shell: az aks get-credentials --resource-group {{ resource_group }} --name {{ aks }}
+  args:
+    executable: /bin/bash
+
+- name: Clean secrets
+  shell: kubectl delete secret {{ secrets }}
+  args:
+    executable: /bin/bash
+
+- name: Generate secrets
+  shell: kubectl create secret docker-registry {{ secrets }} --docker-server={{ cr_host }} --docker-username={{ cr_user }} --docker-password={{ cr_pass }}
+  args:
+    executable: /bin/bash
+
+# - name: Clean deployments
+#   shell: kubectl delete -f /lib/app/app.yaml
+#   args:
+#     executable: /bin/bash
+
+- name: Deployment
+  shell: kubectl apply -f /lib/app/app.yaml
+  args:
+    executable: /bin/bash

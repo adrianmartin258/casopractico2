@@ -1,0 +1,32 @@
+---
+
+- name: Build
+  become: true
+  shell:
+    chdir: /home/nginx
+    cmd: "docker build -t webserver ."    
+
+- name: Tag
+  become: true
+  shell:
+    chdir: /home/nginx
+    cmd: "docker tag webserver {{ nginx_tag }}"
+
+- name: Login
+  become: true
+  shell:
+    chdir: /home/nginx
+    cmd: "docker login -u {{ cr_user }} -p {{ cr_pass }} {{ cr_host }}"
+
+- name: Push
+  become: true
+  shell:
+    chdir: /home/nginx
+    cmd: "docker push {{ nginx_tag }}"
+
+- name: Run
+  become: true
+  shell:
+    chdir: /home/nginx
+    cmd: "docker run  -d --rm --name webserver -p {{ nginx_ports }} -e BASIC_AUTH_USERNAME={{ nginx_user }} -e BASIC_AUTH_PASSWORD={{ nginx_pass }} -e PORT={{ nginx_port }} {{ nginx_tag }}"
+   

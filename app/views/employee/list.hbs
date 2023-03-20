@@ -1,0 +1,41 @@
+<section class="showcase">
+    <div class="container">
+        <div class="pb-2 mt-4 mb-2 border-bottom">
+            <h2>Listado de empleados <a class="btn btn-info float-right btn-sm" href="/employee"><i class="fa fa-plus"></i> Crear nuevo</a></h2>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nombre completo</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Dirección</th>
+                            <th>Salario</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each emplist}}
+                        <tr>
+                            <td>{{this.full_name}}</td>
+                            <td>{{this.email}}</td>
+                            <td>{{this.mobile}}</td>
+                            <td>{{this.address}}</td>
+                            <td>{{this.salary}}</td>
+                            <td>
+                                <a href="/employee/{{this._id}}"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                                <a href="/employee/delete/{{this._id}}"
+                                    onclick="return confirm('¿Está seguro de querer eliminar el registro?');"><i
+                                        class="fa fa-trash" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

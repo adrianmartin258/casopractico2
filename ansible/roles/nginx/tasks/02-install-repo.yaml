@@ -1,0 +1,32 @@
+---
+
+- name: Limpiar Nginx
+  become: true
+  shell:
+    cmd: "rm -r -f  /home/nginx"
+    chdir: /home
+
+- name: Copiar Nginx
+  become: true
+  copy:
+    src: "../../../../nginx"
+    dest: /home  
+    mode: 0777
+
+- name: Generar Key
+  become: true
+  shell:
+    chdir: /home/nginx
+    cmd: "/usr/bin/openssl genrsa -out /home/nginx/files/clave.key  4096 2>/dev/null"    
+
+- name: Generar CSR
+  become: true
+  shell:
+    chdir: /home/nginx
+    cmd: "/usr/bin/openssl req -new -key /home/nginx/files/clave.key -out /home/nginx/files/csr.csr -config /home/nginx/files/config.cnf 2>/dev/null"    
+
+- name: Generar CRT
+  become: true
+  shell:
+    chdir: /home/nginx
+    cmd: "/usr/bin/openssl x509 -req -days 365 -in /home/nginx/files/csr.csr -signkey /home/nginx/files/clave.key -out /home/nginx/files/certificado.crt 2>/dev/null"    

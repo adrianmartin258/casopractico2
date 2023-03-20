@@ -1,0 +1,7 @@
+*
+!Dockerfile
+!files/run.sh
+!files/nginx.conf.tmpl
+!files/certificado.crt
+!files/clave.key
+

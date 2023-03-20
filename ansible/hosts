@@ -1,0 +1,10 @@
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_ssh_extra_args='-oStrictHostKeyChecking=no -i /home/adrian/.ssh/id_rsa'
+ansible_user=amartin
+
+[azurevm]
+52.142.253.80
+
+[aks]
+52.142.253.80

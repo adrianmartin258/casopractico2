@@ -1,0 +1,10 @@
+# Ansible secrets
+secrets.yml
+
+terraform/idazure.sh
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*

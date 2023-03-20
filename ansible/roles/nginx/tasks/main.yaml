@@ -1,0 +1,7 @@
+---
+
+- include_tasks: 01-install-podman.yaml
+- include_tasks: 02-install-repo.yaml
+- include_tasks: 03-deploy-nginx.yaml
+
+

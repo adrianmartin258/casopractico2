@@ -1,0 +1,11 @@
+---
+
+- name: API
+  hosts:
+    - aks
+  vars_files:
+    - secrets.yml
+  roles:
+    - kubernetes
+
+    

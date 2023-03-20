@@ -1,0 +1,51 @@
+---
+
+- name: Instalacion de paquetes
+  become: true
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
+
+- name: Clave Docker
+  become: true
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Repositorio Docker
+  become: true
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+
+- name: Instalacion Docker
+  become: true
+  apt:
+    name: "{{item}}"
+    state: latest
+    update_cache: yes
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io  
+
+- name: Activar Docker
+  become: true
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Instalar docker-compose
+  become: true
+  get_url:
+    url : https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: 'u+x,g+x'
